@@ -41,7 +41,7 @@ const User = mongoose.model("User", UserSchema);
 app.post("/api/login", (req, res) => {
   const { email, password } = req.body;
 
-  if (email === "omgosai116@gmail.com" && password === "123456") {
+  if (email === "sanskargosai@gmail.com" && password === "Astha29") {
     return res.json({ token: "simple-token" });
   }
 
@@ -60,26 +60,26 @@ app.get("/api/users", async (req, res) => {
    ADD USER (AUTO INCREMENT)
 ============================= */
 app.post("/api/users", async (req, res) => {
-  try {
-    const lastUser = await User.findOne().sort({ userNumber: -1 });
+  const lastUser = await User.findOne().sort({ _id: -1 });
 
-    let nextNumber = 10001;
-
-    if (lastUser && lastUser.userNumber) {
-      const lastNumber = parseInt(lastUser.userNumber.replace("U", ""));
-      nextNumber = lastNumber + 1;
-    }
-
-    const newUser = new User({
-      ...req.body,
-      userNumber: "U" + nextNumber,
-    });
-
-    await newUser.save();
-    res.json(newUser);
-  } catch (error) {
-    res.status(500).json(error);
+  let nextNumber = "U10001";
+  if (lastUser && lastUser.userNumber) {
+    const num = parseInt(lastUser.userNumber.substring(1)) + 1;
+    nextNumber = "U" + num;
   }
+
+  const newUser = new User({
+    userNumber: nextNumber,
+    name: req.body.name,
+    email: req.body.email,
+    phone: req.body.phone,
+    date: req.body.date,
+    totalBill: req.body.totalBill,
+    status: req.body.status || "Active",
+  });
+
+  await newUser.save();
+  res.json(newUser);
 });
 
 /* =============================
@@ -103,12 +103,14 @@ app.put("/api/users/:id", async (req, res) => {
 app.delete("/api/users/:id", async (req, res) => {
   const { password } = req.body;
 
-  // Admin password
-  if (password !== "123456") {
-    return res.status(401).json({ message: "Invalid Password" });
+  const ADMIN_PASSWORD = process.env.DELETE_PASSWORD;
+
+  if (password !== ADMIN_PASSWORD) {
+    return res.status(401).json({ message: "Invalid password" });
   }
 
   await User.findByIdAndDelete(req.params.id);
+
   res.json({ message: "User deleted successfully" });
 });
 
