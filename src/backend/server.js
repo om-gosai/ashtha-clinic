@@ -19,16 +19,12 @@ mongoose
 const UserSchema = new mongoose.Schema(
   {
     userNumber: String,
+    Caseno: String,
     name: String,
-    email: String,
     phone: String,
     date: String, // ✅ REPLACED loginCode
-    totalBill: {
-      type: Number,
-      default: 0,
-    },
-    role: String,
-    status: String,
+    // role: String,
+    // status: String,
   },
   { timestamps: true },
 );
