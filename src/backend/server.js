@@ -16,20 +16,18 @@ mongoose
 /* =============================
    USER SCHEMA
 ============================= */
-const UserSchema = new mongoose.Schema(
-  {
-    userNumber: String,
-    Caseno: String,
-    name: String,
-    phone: String,
-    date: String, // ✅ REPLACED loginCode
-    // role: String,
-    // status: String,
-  },
-  { timestamps: true },
-);
+const mongoose = require("mongoose");
 
-const User = mongoose.model("User", UserSchema);
+const userSchema = new mongoose.Schema({
+  userNumber: String,
+  caseNo: String, // ✅ New
+  name: String,
+  phone: String,
+  village: String, // ✅ New
+  date: String,
+});
+
+module.exports = mongoose.model("User", userSchema);
 
 /* =============================
    LOGIN ROUTE
